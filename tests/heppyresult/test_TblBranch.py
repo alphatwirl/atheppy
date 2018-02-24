@@ -9,7 +9,7 @@ except ImportError:
     pass
 
 if hasROOT:
-    from alphatwirl.heppyresult import TblBranch
+    from atheppy.heppyresult import TblBranch
 
 ##__________________________________________________________________||
 @unittest.skipUnless(hasROOT, "has no ROOT")

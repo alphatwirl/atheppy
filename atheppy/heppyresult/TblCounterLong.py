@@ -1,8 +1,8 @@
 # Tai Sakuma <tai.sakuma@gmail.com>
 import os
 
-from ..misc import mkdir_p
-from ..misc import list_to_aligned_text
+from alphatwirl.misc import mkdir_p
+from alphatwirl.misc import list_to_aligned_text
 from .ReadCounter import ReadCounter
 
 ##__________________________________________________________________||

@@ -3,9 +3,9 @@ import os
 from operator import itemgetter
 import ROOT
 
-from ..misc import mkdir_p
-from ..misc import list_to_aligned_text
-from ..roottree import inspect_tree
+from alphatwirl.misc import mkdir_p
+from alphatwirl.misc import list_to_aligned_text
+from alphatwirl.roottree import inspect_tree
 
 ##__________________________________________________________________||
 class TblBranch(object):

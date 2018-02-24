@@ -13,10 +13,10 @@ try:
 except ImportError:
     has_no_ROOT = True
 
-from alphatwirl.heppyresult import EventBuilderConfig
+from atheppy.heppyresult import EventBuilderConfig
 
 if not has_no_ROOT:
-    from alphatwirl.heppyresult import EventBuilderConfigMaker
+    from atheppy.heppyresult import EventBuilderConfigMaker
 
 ##__________________________________________________________________||
 pytestmark = pytest.mark.skipif(has_no_ROOT, reason="has no ROOT")
@@ -38,7 +38,7 @@ def component(analyzer):
 
 @pytest.fixture()
 def obj(monkeypatch, mockroot):
-    module = sys.modules['alphatwirl.heppyresult.EventBuilderConfigMaker']
+    module = sys.modules['atheppy.heppyresult.EventBuilderConfigMaker']
     monkeypatch.setattr(module, 'ROOT', mockroot)
     return EventBuilderConfigMaker(
         analyzerName='treeProducerSusyAlphaT',

@@ -1,6 +1,6 @@
 # Tai Sakuma <tai.sakuma@gmail.com>
-from ..misc import mkdir_p
-from ..misc import list_to_aligned_text
+from alphatwirl.misc import mkdir_p
+from alphatwirl.misc import list_to_aligned_text
 import os
 
 ##__________________________________________________________________||

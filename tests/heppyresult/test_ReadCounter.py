@@ -1,4 +1,4 @@
-from alphatwirl.heppyresult import ReadCounter
+from atheppy.heppyresult import ReadCounter
 import unittest
 import collections
 import io

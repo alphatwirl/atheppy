@@ -1,5 +1,5 @@
 import os
-from alphatwirl.heppyresult import HeppyResult
+from atheppy.heppyresult import HeppyResult
 import unittest
 
 ##__________________________________________________________________||

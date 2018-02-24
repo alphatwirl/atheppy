@@ -1,5 +1,5 @@
 import os
-from alphatwirl.heppyresult import Component
+from atheppy.heppyresult import Component
 import unittest
 import pickle
 

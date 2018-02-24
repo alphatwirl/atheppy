@@ -1,4 +1,4 @@
-from alphatwirl.heppyresult import ReadVersionInfo
+from atheppy.heppyresult import ReadVersionInfo
 import os
 import unittest
 import io

@@ -14,7 +14,7 @@ except ImportError:
     has_no_ROOT = True
 
 if not has_no_ROOT:
-    from alphatwirl.heppyresult import EventBuilder
+    from atheppy.heppyresult import EventBuilder
 
 ##__________________________________________________________________||
 pytestmark = pytest.mark.skipif(has_no_ROOT, reason="has no ROOT")
@@ -23,7 +23,7 @@ pytestmark = pytest.mark.skipif(has_no_ROOT, reason="has no ROOT")
 @pytest.fixture()
 def mockBaseEventBuilder(monkeypatch):
     ret = mock.Mock()
-    module = sys.modules['alphatwirl.heppyresult.EventBuilder']
+    module = sys.modules['atheppy.heppyresult.EventBuilder']
     monkeypatch.setattr(module, 'BEventBuilder', ret)
     return ret
 

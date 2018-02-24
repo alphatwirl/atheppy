@@ -8,7 +8,7 @@ try:
 except ImportError:
     import mock
 
-from alphatwirl.heppyresult import ComponentLoop
+from atheppy.heppyresult import ComponentLoop
 
 ##__________________________________________________________________||
 @pytest.fixture()
