@@ -120,7 +120,7 @@ class AtHeppy(object):
         # tbl_tree.txt
         tbl_tree_path = os.path.join(self.outdir, 'tbl_tree.txt')
         if self.force or not os.path.exists(tbl_tree_path):
-            tblTree = alphatwirl.heppyresult.TblTree(
+            tblTree = atheppy.heppyresult.TblTree(
                 analyzerName=analyzerName,
                 fileName=fileName,
                 treeName=treeName,
@@ -131,7 +131,7 @@ class AtHeppy(object):
         # tbl_branch.txt
         tbl_branch_path = os.path.join(self.outdir, 'tbl_branch.txt')
         if self.force or not os.path.exists(tbl_branch_path):
-            tblBranch = alphatwirl.heppyresult.TblBranch(
+            tblBranch = atheppy.heppyresult.TblBranch(
                 analyzerName=analyzerName,
                 fileName=fileName,
                 treeName=treeName,
@@ -142,7 +142,7 @@ class AtHeppy(object):
         # tbl_branch_size.tx
         tbl_branch_size_path = os.path.join(self.outdir, 'tbl_branch_size.txt')
         if self.force or not os.path.exists(tbl_branch_size_path):
-            tblBranchSize = alphatwirl.heppyresult.TblBranch(
+            tblBranchSize = atheppy.heppyresult.TblBranch(
                 analyzerName=analyzerName,
                 fileName=fileName,
                 treeName=treeName,
@@ -156,7 +156,7 @@ class AtHeppy(object):
         # tbl_branch_title.txt
         tbl_branch_title_path = os.path.join(self.outdir, 'tbl_branch_title.txt')
         if self.force or not os.path.exists(tbl_branch_title_path):
-            tblBranchTitle = alphatwirl.heppyresult.TblBranch(
+            tblBranchTitle = atheppy.heppyresult.TblBranch(
                 analyzerName=analyzerName,
                 fileName=fileName,
                 treeName=treeName,
@@ -170,7 +170,7 @@ class AtHeppy(object):
         # tbl_dataset.txt
         tbl_dataset_path = os.path.join(self.outdir, 'tbl_dataset.txt')
         if self.force or not os.path.exists(tbl_dataset_path):
-            tblDataset = alphatwirl.heppyresult.TblComponentConfig(
+            tblDataset = atheppy.heppyresult.TblComponentConfig(
                 outPath=tbl_dataset_path,
                 columnNames=('dataset', ),
                 keys=('dataset', ),
@@ -181,7 +181,7 @@ class AtHeppy(object):
         if self.datamc == 'mc':
             tbl_xsec_path = os.path.join(self.outdir, 'tbl_xsec.txt')
             if self.force or not os.path.exists(tbl_xsec_path):
-                tblXsec = alphatwirl.heppyresult.TblComponentConfig(
+                tblXsec = atheppy.heppyresult.TblComponentConfig(
                     outPath=tbl_xsec_path,
                     columnNames=('xsec', ),
                     keys=('xSection', ),
@@ -192,7 +192,7 @@ class AtHeppy(object):
         if self.datamc == 'mc':
             tbl_nevt_path = os.path.join(self.outdir, 'tbl_nevt.txt')
             if self.force or not os.path.exists(tbl_nevt_path):
-                tblNevt = alphatwirl.heppyresult.TblCounter(
+                tblNevt = atheppy.heppyresult.TblCounter(
                     outPath=tbl_nevt_path,
                     columnNames=('nevt', 'nevt_sumw'),
                     analyzerName='skimAnalyzerCount',
@@ -207,7 +207,7 @@ class AtHeppy(object):
             reader_top.add(r)
             collector_top.add(c)
         eventLoopRunner = alphatwirl.loop.MPEventLoopRunner(self.parallel.communicationChannel)
-        eventBuilderConfigMaker = alphatwirl.heppyresult.EventBuilderConfigMaker(
+        eventBuilderConfigMaker = atheppy.heppyresult.EventBuilderConfigMaker(
             analyzerName=analyzerName,
             fileName=fileName,
             treeName=treeName,
@@ -230,7 +230,7 @@ class AtHeppy(object):
         dataset_readers.add(eventReader)
 
         if components == ['all']: components = None
-        heppyResult = alphatwirl.heppyresult.HeppyResult(
+        heppyResult = atheppy.heppyresult.HeppyResult(
             path=self.heppydir,
             componentNames=components,
             componentHasTheseFiles=[analyzerName]
