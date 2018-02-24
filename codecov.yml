@@ -1,0 +1,2 @@
+ignore:
+    - "atheppy/_version.py"
