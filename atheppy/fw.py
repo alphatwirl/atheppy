@@ -237,16 +237,16 @@ class AtHeppy(object):
             componentHasTheseFiles=[analyzerName]
         )
 
-        if self.parallel_mode in ('subprocess', 'htcondor'):
+        if self.parallel_mode in ('multiprocessing', ):
+            loop = alphatwirl.datasetloop.DatasetLoop(
+               datasets=heppyResult.components(),
+               reader=dataset_readers
+            )
+        else:
             loop = alphatwirl.datasetloop.ResumableDatasetLoop(
                datasets=heppyResult.components(),
                reader=dataset_readers,
                workingarea=self.parallel.workingarea
-            )
-        else:
-            loop = alphatwirl.datasetloop.DatasetLoop(
-               datasets=heppyResult.components(),
-               reader=dataset_readers
             )
 
         return loop
