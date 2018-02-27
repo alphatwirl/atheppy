@@ -13,6 +13,7 @@ except:
 import alphatwirl
 
 from .yes_no import query_yes_no
+from . import heppyresult
 
 ##__________________________________________________________________||
 import logging
@@ -120,7 +121,7 @@ class AtHeppy(object):
         # tbl_tree.txt
         tbl_tree_path = os.path.join(self.outdir, 'tbl_tree.txt')
         if self.force or not os.path.exists(tbl_tree_path):
-            tblTree = atheppy.heppyresult.TblTree(
+            tblTree = heppyresult.TblTree(
                 analyzerName=analyzerName,
                 fileName=fileName,
                 treeName=treeName,
@@ -131,7 +132,7 @@ class AtHeppy(object):
         # tbl_branch.txt
         tbl_branch_path = os.path.join(self.outdir, 'tbl_branch.txt')
         if self.force or not os.path.exists(tbl_branch_path):
-            tblBranch = atheppy.heppyresult.TblBranch(
+            tblBranch = heppyresult.TblBranch(
                 analyzerName=analyzerName,
                 fileName=fileName,
                 treeName=treeName,
@@ -142,7 +143,7 @@ class AtHeppy(object):
         # tbl_branch_size.tx
         tbl_branch_size_path = os.path.join(self.outdir, 'tbl_branch_size.txt')
         if self.force or not os.path.exists(tbl_branch_size_path):
-            tblBranchSize = atheppy.heppyresult.TblBranch(
+            tblBranchSize = heppyresult.TblBranch(
                 analyzerName=analyzerName,
                 fileName=fileName,
                 treeName=treeName,
@@ -156,7 +157,7 @@ class AtHeppy(object):
         # tbl_branch_title.txt
         tbl_branch_title_path = os.path.join(self.outdir, 'tbl_branch_title.txt')
         if self.force or not os.path.exists(tbl_branch_title_path):
-            tblBranchTitle = atheppy.heppyresult.TblBranch(
+            tblBranchTitle = heppyresult.TblBranch(
                 analyzerName=analyzerName,
                 fileName=fileName,
                 treeName=treeName,
@@ -170,7 +171,7 @@ class AtHeppy(object):
         # tbl_dataset.txt
         tbl_dataset_path = os.path.join(self.outdir, 'tbl_dataset.txt')
         if self.force or not os.path.exists(tbl_dataset_path):
-            tblDataset = atheppy.heppyresult.TblComponentConfig(
+            tblDataset = heppyresult.TblComponentConfig(
                 outPath=tbl_dataset_path,
                 columnNames=('dataset', ),
                 keys=('dataset', ),
@@ -181,7 +182,7 @@ class AtHeppy(object):
         if self.datamc == 'mc':
             tbl_xsec_path = os.path.join(self.outdir, 'tbl_xsec.txt')
             if self.force or not os.path.exists(tbl_xsec_path):
-                tblXsec = atheppy.heppyresult.TblComponentConfig(
+                tblXsec = heppyresult.TblComponentConfig(
                     outPath=tbl_xsec_path,
                     columnNames=('xsec', ),
                     keys=('xSection', ),
@@ -192,7 +193,7 @@ class AtHeppy(object):
         if self.datamc == 'mc':
             tbl_nevt_path = os.path.join(self.outdir, 'tbl_nevt.txt')
             if self.force or not os.path.exists(tbl_nevt_path):
-                tblNevt = atheppy.heppyresult.TblCounter(
+                tblNevt = heppyresult.TblCounter(
                     outPath=tbl_nevt_path,
                     columnNames=('nevt', 'nevt_sumw'),
                     analyzerName='skimAnalyzerCount',
@@ -207,7 +208,7 @@ class AtHeppy(object):
             reader_top.add(r)
             collector_top.add(c)
         eventLoopRunner = alphatwirl.loop.MPEventLoopRunner(self.parallel.communicationChannel)
-        eventBuilderConfigMaker = atheppy.heppyresult.EventBuilderConfigMaker(
+        eventBuilderConfigMaker = heppyresult.EventBuilderConfigMaker(
             analyzerName=analyzerName,
             fileName=fileName,
             treeName=treeName,
@@ -230,7 +231,7 @@ class AtHeppy(object):
         dataset_readers.add(eventReader)
 
         if components == ['all']: components = None
-        heppyResult = atheppy.heppyresult.HeppyResult(
+        heppyResult = heppyresult.HeppyResult(
             path=self.heppydir,
             componentNames=components,
             componentHasTheseFiles=[analyzerName]
