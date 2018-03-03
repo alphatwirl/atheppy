@@ -95,11 +95,14 @@ class AtHeppy(object):
         except KeyboardInterrupt:
             logger = logging.getLogger(__name__)
             logger.warning('received KeyboardInterrupt')
-            if query_yes_no('terminate running jobs'):
-               logger.warning('terminating running jobs')
+            if self.parallel_mode in ('multiprocessing', ):
                self.parallel.terminate()
             else:
-               logger.warning('not terminating running jobs')
+               if query_yes_no('terminate running jobs'):
+                  logger.warning('terminating running jobs')
+                  self.parallel.terminate()
+               else:
+                  logger.warning('not terminating running jobs')
         self.parallel.end()
 
     def _configure(self, components, reader_collector_pairs,
