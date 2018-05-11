@@ -217,9 +217,8 @@ class AtHeppy(object):
             collector_top.add(c)
         eventLoopRunner = alphatwirl.loop.MPEventLoopRunner(self.parallel.communicationChannel)
         eventBuilderConfigMaker = heppyresult.EventBuilderConfigMaker(
-            analyzerName=analyzerName,
-            fileName=fileName,
-            treeName=treeName,
+           analyzerName=analyzerName, fileName=fileName, treeName=treeName,
+           check_files=True, skip_error_files=True
         )
         datasetIntoEventBuildersSplitter = alphatwirl.loop.DatasetIntoEventBuildersSplitter(
             EventBuilder=alphatwirl.roottree.BuildEvents,
