@@ -13,10 +13,9 @@ try:
 except ImportError:
     has_no_ROOT = True
 
-from atheppy.heppyresult import EventBuilderConfig
-
 if not has_no_ROOT:
     from atheppy.heppyresult import EventBuilderConfigMaker
+    from alphatwirl.roottree import BEvents
 
 ##__________________________________________________________________||
 pytestmark = pytest.mark.skipif(has_no_ROOT, reason="has no ROOT")
@@ -52,9 +51,10 @@ def test_repr(obj):
 
 def test_create_config_for(obj, component):
     expected = dict(
-        inputPaths=['/heppyresult/dir/TTJets/treeProducerSusyAlphaT/tree.root'],
-        treeName='tree',
-        maxEvents=30,
+        events_class=BEvents,
+        file_paths=['/heppyresult/dir/TTJets/treeProducerSusyAlphaT/tree.root'],
+        tree_name='tree',
+        max_events=30,
         start=20,
         name='TTJets',
         component = component,
