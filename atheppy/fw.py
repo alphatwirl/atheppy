@@ -222,7 +222,7 @@ class AtHeppy(object):
             treeName=treeName,
         )
         datasetIntoEventBuildersSplitter = alphatwirl.loop.DatasetIntoEventBuildersSplitter(
-            EventBuilder=alphatwirl.roottree.BEventBuilder,
+            EventBuilder=alphatwirl.roottree.BuildEvents,
             eventBuilderConfigMaker=eventBuilderConfigMaker,
             maxEvents=self.max_events_per_dataset,
             maxEventsPerRun=self.max_events_per_process,
