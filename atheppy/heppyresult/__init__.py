@@ -24,3 +24,4 @@ if hasROOT:
     from .EventBuilderConfigMaker import EventBuilderConfigMaker
     from .TblBranch import TblBranch
     from .TblTree import TblTree
+    from .TblSMSNevt import TblSMSNevt
