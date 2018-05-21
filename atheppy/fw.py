@@ -201,7 +201,7 @@ class AtHeppy(object):
                 dataset_readers.add(tblXsec)
 
         # tbl_nevt.txt for MC
-        if self.datamc == 'mc':
+        if self.datamc == 'mc' and not self.susy_sms:
             tbl_nevt_path = os.path.join(self.outdir, 'tbl_nevt.txt')
             if self.force or not os.path.exists(tbl_nevt_path):
                 tblNevt = heppyresult.TblCounter(
@@ -212,6 +212,17 @@ class AtHeppy(object):
                     levels=('All Events', 'Sum Weights')
                 )
                 dataset_readers.add(tblNevt)
+
+        # tbl_nevt_sms.txt for MC SUSY SMS
+        if self.datamc == 'mc' and self.susy_sms:
+            tbl_nevt_sms_path = os.path.join(self.outdir, 'tbl_nevt_sms.txt')
+            if self.force or not os.path.exists(tbl_nevt_sms_path):
+               tblSMSNevt = heppyresult.TblSMSNevt(
+                  analyzerName='susyParameterScanAnalyzer',
+                  fileName='genEvtsPerMass.root',
+                  outPath=tbl_nevt_sms_path
+               )
+               dataset_readers.add(tblSMSNevt)
 
         reader_top = alphatwirl.loop.ReaderComposite()
         collector_top = alphatwirl.loop.CollectorComposite()
