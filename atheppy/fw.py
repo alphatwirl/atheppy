@@ -32,6 +32,7 @@ class AtHeppy(object):
         outdir (str): the output directory
         heppydir (str): Heppy results dir
         datamc (str): 'data' or 'mc'
+        susy_sms (bool): if True, don't create tbl_xsec.txt
         force (bool): overwrite the output if True
         quiet (bool): don't show progress bars if True
         parallel_mode (str): 'multiprocessing', 'subprocess', 'htcondor'
@@ -49,6 +50,7 @@ class AtHeppy(object):
     @_deprecated_class_method_option('htcondor_job_desc_extra', msg='use dispatcher_options instead')
     def __init__(self, outdir, heppydir,
                  datamc='mc',
+                 susy_sms=False,
                  force=False, quiet=False,
                  parallel_mode='multiprocessing',
                  htcondor_job_desc_extra=[ ],
@@ -75,6 +77,7 @@ class AtHeppy(object):
         self.outdir = outdir
         self.heppydir = heppydir
         self.datamc = datamc
+        self.susy_sms = susy_sms
         self.force =  force
         self.max_events_per_dataset = max_events_per_dataset
         self.max_events_per_process = max_events_per_process
@@ -187,7 +190,7 @@ class AtHeppy(object):
             dataset_readers.add(tblDataset)
 
         # tbl_xsec.txt for MC
-        if self.datamc == 'mc':
+        if self.datamc == 'mc' and not self.susy_sms:
             tbl_xsec_path = os.path.join(self.outdir, 'tbl_xsec.txt')
             if self.force or not os.path.exists(tbl_xsec_path):
                 tblXsec = heppyresult.TblComponentConfig(
