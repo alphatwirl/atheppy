@@ -23,9 +23,9 @@ class TblSMSNevt(object):
         for histname in histnames:
             h = file_.Get(histname)
             xaxis_lastbin_lowedge = h.GetXaxis().GetBinLowEdge(h.GetNbinsX()+1)
-            mass1 = np.concatenate((np.array([1]), np.arange(50, xaxis_lastbin_lowedge+50, step=50, dtype=int)))
+            mass1 = np.concatenate((np.array([1]), np.arange(50, xaxis_lastbin_lowedge+50, step=25, dtype=int)))
             yaxis_lastbin_lowedge = h.GetYaxis().GetBinLowEdge(h.GetNbinsY()+1)
-            mass2 = np.concatenate((np.array([1]), np.arange(50, yaxis_lastbin_lowedge+50, step=50, dtype=int)))
+            mass2 = np.concatenate((np.array([1]), np.arange(50, yaxis_lastbin_lowedge+50, step=25, dtype=int)))
             for m1 in mass1:
                 binx = h.GetXaxis().FindBin(m1)
                 ## binlowedgex = h.GetXaxis().GetBinLowEdge(binx)
