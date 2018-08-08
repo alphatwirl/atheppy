@@ -1,6 +1,8 @@
 # Tai Sakuma <tai.sakuma@cern.ch>
 import os
 import sys
+import copy
+from collections import OrderedDict
 import logging
 
 import gzip
@@ -242,7 +244,7 @@ class AtHeppy(object):
             maxFiles=self.max_files_per_dataset,
             maxFilesPerRun=self.max_files_per_process
         )
-        eventReader = alphatwirl.loop.EventDatasetReader(
+        eventReader = EventDatasetReader(
             eventLoopRunner=eventLoopRunner,
             reader=reader_top,
             collector=collector_top,
@@ -280,5 +282,83 @@ class AtHeppy(object):
                func=loop,
                profile_out_path=self.profile_out_path
             )
+
+##__________________________________________________________________||
+class EventDatasetReader(object):
+    def __init__(self, eventLoopRunner, reader, collector,
+                 split_into_build_events):
+
+        self.eventLoopRunner = eventLoopRunner
+        self.reader = reader
+        self.collector = collector
+        self.split_into_build_events = split_into_build_events
+
+        self.runids = [ ]
+        self.runid_dataset_map = { }
+        self.dataset_runid_reader_map = OrderedDict()
+
+        name_value_pairs = (
+            ('eventLoopRunner', self.eventLoopRunner),
+            ('reader', self.reader),
+            ('collector', self.collector),
+            ('split_into_build_events', self.split_into_build_events),
+        )
+        self._repr = '{}({})'.format(
+            self.__class__.__name__,
+            ', '.join(['{}={!r}'.format(n, v) for n, v in name_value_pairs]),
+        )
+
+    def __repr__(self):
+        return self._repr
+
+    def begin(self):
+        self.eventLoopRunner.begin()
+
+        self.runids = [ ]
+        self.runid_dataset_map = { }
+        self.dataset_runid_reader_map = OrderedDict()
+
+    def read(self, dataset):
+        build_events_list = self.split_into_build_events(dataset)
+        eventLoops = [ ]
+        for build_events in build_events_list:
+            reader = copy.deepcopy(self.reader)
+            eventLoop = alphatwirl.loop.EventLoop(build_events, reader, dataset.name)
+            eventLoops.append(eventLoop)
+        runids = self.eventLoopRunner.run_multiple(eventLoops)
+
+        self.runids.extend(runids)
+        # e.g., [0, 1, 2]
+
+        self.runid_dataset_map.update({i: dataset.name for i in runids})
+        # e.g., {0: 'dataset1', 1: 'dataset1', 2: 'dataset1', 3: 'dataset3'}
+
+        self.dataset_runid_reader_map[dataset.name] = OrderedDict([(i, None) for i in runids])
+        # e.g.,
+        # OrderedDict(
+        #     [
+        #         ('dataset1', OrderedDict([(0, None), (1, None), (2, None)])),
+        #         ('dataset2', OrderedDict()),
+        #         ('dataset3', OrderedDict([(3, None)]))
+        #     ])
+
+    def end(self):
+
+        runids_towait = self.runids[:]
+        while runids_towait:
+            runid, reader = self.eventLoopRunner.receive_one()
+            self._merge(runid, reader)
+            runids_towait.remove(runid)
+
+        dataset_readers_list = [(d, list(rr.values())) for d, rr in self.dataset_runid_reader_map.items()]
+        # e.g.,
+        # [('dataset1', reader), ('dataset2', []), ('dataset3', reader)]
+
+        return self.collector.collect(dataset_readers_list)
+
+    def _merge(self, runid, reader):
+        dataset = self.runid_dataset_map[runid]
+        runid_reader_map = self.dataset_runid_reader_map[dataset]
+        alphatwirl.loop.merge.merge_in_order(runid_reader_map, runid, reader)
 
 ##__________________________________________________________________||
