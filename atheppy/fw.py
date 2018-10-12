@@ -226,8 +226,8 @@ class AtHeppy(object):
                )
                dataset_readers.add(tblSMSNevt)
 
-        reader_top = alphatwirl.loop.ReaderComposite()
-        collector_top = alphatwirl.loop.CollectorComposite()
+        reader_top = ReaderCompositeWrapper()
+        collector_top = CollectorComposite()
         for r, c in reader_collector_pairs:
             reader_top.add(r)
             collector_top.add(c)
@@ -320,9 +320,11 @@ class EventDatasetReader(object):
 
     def read(self, dataset):
         build_events_list = self.split_into_build_events(dataset)
+
         eventLoops = [ ]
         for build_events in build_events_list:
             reader = copy.deepcopy(self.reader)
+            reader.dataset = dataset.name
             eventLoop = alphatwirl.loop.EventLoop(build_events, reader, dataset.name)
             eventLoops.append(eventLoop)
         runids = self.eventLoopRunner.run_multiple(eventLoops)
@@ -352,13 +354,55 @@ class EventDatasetReader(object):
 
         dataset_readers_list = [(d, list(rr.values())) for d, rr in self.dataset_runid_reader_map.items()]
         # e.g.,
-        # [('dataset1', reader), ('dataset2', []), ('dataset3', reader)]
+        # [('dataset1', [reader]), ('dataset2', []), ('dataset3', [reader])]
+        # at most one reader
 
-        return self.collector.collect(dataset_readers_list)
+        dataset_reader_list = [(d, r[0]) for d, r in dataset_readers_list if r]
+        # [('dataset1', reader), ('dataset3', reader)]
+        # TODO: now only keeping data sets with non-empty inputs. but
+        # should keep data sets with empty inputs as well so as to
+        # let readers return summary of empty inputs.
+
+
+        return self.collector(dataset_reader_list)
 
     def _merge(self, runid, reader):
         dataset = self.runid_dataset_map[runid]
         runid_reader_map = self.dataset_runid_reader_map[dataset]
         alphatwirl.loop.merge.merge_in_order(runid_reader_map, runid, reader)
+
+##__________________________________________________________________||
+class ReaderCompositeWrapper(alphatwirl.loop.ReaderComposite):
+   def __init__(self, readers=None):
+      super(ReaderCompositeWrapper, self).__init__(readers)
+      self._dataset = None
+
+   def get_dataset(self):
+      return self._dataset
+
+   def set_dataset(self, value):
+      self._dataset = value
+      for reader in self.readers:
+         reader.dataset = value
+
+   dataset = property(get_dataset, set_dataset)
+
+##__________________________________________________________________||
+class CollectorComposite(object):
+    def __init__(self):
+        self.components = [ ]
+
+    def add(self, collector):
+        self.components.append(collector)
+
+    def __call__(self, dataset_reader_list):
+
+        ret = [ ]
+        for i, collector in enumerate(self.components):
+            report = alphatwirl.progressbar.ProgressReport(name='collecting results', done=(i + 1), total=len(self.components))
+            alphatwirl.progressbar.report_progress(report)
+            ret.append(collector([(dataset, readerComposite.readers[i])
+                                  for dataset, readerComposite in dataset_reader_list]))
+        return ret
 
 ##__________________________________________________________________||
