@@ -6,7 +6,8 @@ import os
 from atheppy.heppyresult import ReadComponentConfig
 
 ##__________________________________________________________________||
-sample_cmp_cfg = """MCComponent: QCD_HT_100To250_Chunk0
+sample_cmp_cfg = """
+MCComponent: QCD_HT_100To250_Chunk0
 	addWeight      :   1.0
 	efficiency     :   CFG: eff
 	triggers       :   []
