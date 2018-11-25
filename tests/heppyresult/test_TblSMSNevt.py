@@ -19,12 +19,16 @@ def mock_mkdir_p(monkeypatch):
     monkeypatch.setattr(module, 'mkdir_p', ret)
     return ret
 
-## @pytest.fixture(autouse=True)
-## def mock_open(monkeypatch):
-##     ret = mock.MagicMock()
-##     module = sys.modules['atheppy.heppyresult.TblSMSNevt']
-##     monkeypatch.setitem(module, 'open', ret)
-##     return ret
+@pytest.fixture()
+def mock_open(monkeypatch):
+    ret = mock.MagicMock()
+    try:
+        import __builtin__
+        monkeypatch.setattr(__builtin__, 'open', ret)
+    except ImportError:
+        import builtins
+        monkeypatch.setattr(builtins, 'open', ret)
+    return ret
 
 @pytest.fixture()
 def component_t1tttt():
@@ -57,14 +61,15 @@ def obj():
     )
     yield ret
 
-def test_read(obj, component_t1tttt, component_t2bb):
+def test_read(obj, mock_open, component_t1tttt, component_t2bb):
     obj.begin()
     obj.read(component_t1tttt)
     obj.read(component_t2bb)
 
-    with mock.patch('__builtin__.open', mock.mock_open()) as mock_file:
-        obj.end()
-        open().write.call_args_list
+    obj.end()
+    write_call_args = open().__enter__().write.call_args_list
+    assert 1 == len(write_call_args)
+    assert 1148 == (len(write_call_args[0][0][0].split('\n')))
 
 
 ##__________________________________________________________________||
