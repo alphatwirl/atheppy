@@ -293,6 +293,8 @@ class EventDatasetReader(object):
         self.collector = collector
         self.split_into_build_events = split_into_build_events
 
+        self.EventLoop = alphatwirl.loop.EventLoop
+
         self.runids = [ ]
         self.runid_dataset_map = { }
         self.dataset_runid_reader_map = OrderedDict()
@@ -320,7 +322,6 @@ class EventDatasetReader(object):
 
     def read(self, dataset):
         build_events_list = self.split_into_build_events(dataset)
-
         eventLoops = [ ]
         for build_events in build_events_list:
             reader = copy.deepcopy(self.reader)
@@ -335,7 +336,8 @@ class EventDatasetReader(object):
         self.runid_dataset_map.update({i: dataset.name for i in runids})
         # e.g., {0: 'dataset1', 1: 'dataset1', 2: 'dataset1', 3: 'dataset3'}
 
-        self.dataset_runid_reader_map[dataset.name] = OrderedDict([(i, None) for i in runids])
+        self.dataset_runid_reader_map[dataset.name] = self.dataset_runid_reader_map.get(dataset.name, OrderedDict())
+        self.dataset_runid_reader_map[dataset.name].update(((i, None) for i in runids))
         # e.g.,
         # OrderedDict(
         #     [
