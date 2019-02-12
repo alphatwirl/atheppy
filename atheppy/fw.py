@@ -390,6 +390,8 @@ class ReaderCompositeWrapper(alphatwirl.loop.ReaderComposite):
    dataset = property(get_dataset, set_dataset)
 
 ##__________________________________________________________________||
+from alphatwirl.progressbar import atpbar
+
 class CollectorComposite(object):
     def __init__(self):
         self.components = [ ]
@@ -400,9 +402,7 @@ class CollectorComposite(object):
     def __call__(self, dataset_reader_list):
 
         ret = [ ]
-        for i, collector in enumerate(self.components):
-            report = alphatwirl.progressbar.ProgressReport(name='collecting results', done=(i + 1), total=len(self.components))
-            alphatwirl.progressbar.report_progress(report)
+        for i, collector in enumerate(atpbar(self.components, name='collecting results')):
             ret.append(collector([(dataset, readerComposite.readers[i])
                                   for dataset, readerComposite in dataset_reader_list]))
         return ret
