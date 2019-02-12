@@ -8,9 +8,9 @@ import logging
 import gzip
 
 try:
-   import cPickle as pickle
+    import cPickle as pickle
 except:
-   import pickle
+    import pickle
 
 import alphatwirl
 from alphatwirl.misc.deprecation import _deprecated_class_method_option
