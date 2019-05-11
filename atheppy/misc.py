@@ -12,10 +12,11 @@ def collect_results_into_tuplelist(reader, columns):
     #         (300, 3, 15, 30)
     # ]
 
+    ret.insert(0, columns)
     return ret
 
 ##__________________________________________________________________||
-def combine_results_into_tuplelist(dataset_reader_list, summary_columns, dataset_column='dataset'):
+def combine_results_into_tuplelist(dataset_reader_list, dataset_column='dataset'):
 
     if not dataset_reader_list:
         return None
@@ -29,17 +30,39 @@ def combine_results_into_tuplelist(dataset_reader_list, summary_columns, dataset
 
     dataset_tuple_list_pairs = [(d, r.collect()) for d, r in dataset_reader_list]
     # e.g.,
-    # dataset_tuple_list_pairs = [
+    # [
+    #     ('QCD', [
+    #         ('htbin', 'njetbin', 'n', 'nvar'),
+    #         (    200,         2, 120,    240),
+    #         (    300,         2, 490,    980),
+    #         (    300,         3, 210,    420)
+    #     ]),
+    #     ('TTJets', [
+    #         ('htbin', 'njetbin', 'n', 'nvar'),
+    #         (    300,         2,  20,     40),
+    #         (    300,         3,  15,     30)
+    #     ]),
+    #     ('WJets', [
+    #         ('htbin', 'njetbin', 'n', 'nvar')
+    #     ])
+    # ]
+
+    summary_columns = dataset_tuple_list_pairs[0][1][0]
+    # e.g., ('htbin', 'njetbin', 'n', 'nvar'),
+
+    dataset_tuple_list_pairs = [(d, t[1:]) for d, t in dataset_tuple_list_pairs]
+    # e.g.,
+    # [
     #     ('QCD', [
     #         (200, 2, 120, 240),
     #         (300, 2, 490, 980),
     #         (300, 3, 210, 420)
     #     ]),
     #     ('TTJets', [
-    #         (300, 2, 20, 40),
-    #         (300, 3, 15, 30)
+    #         (300, 2,  20,  40),
+    #         (300, 3,  15,  30)
     #     ]),
-    #     ('WJets', [])
+    #     ('WJets', [ ])
     # ]
 
     ret = [ ]
