@@ -27,7 +27,7 @@ def combine_results_into_tuplelist(dataset_reader_list, summary_columns, dataset
     #     ('WJets',  reader),
     # ]
 
-    dataset_tuple_list_pairs = [(d, r.results().to_tuple_list()) for d, r in dataset_reader_list]
+    dataset_tuple_list_pairs = [(d, r.collect()) for d, r in dataset_reader_list]
     # e.g.,
     # dataset_tuple_list_pairs = [
     #     ('QCD', [
