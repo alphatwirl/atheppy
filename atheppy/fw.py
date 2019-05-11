@@ -12,6 +12,8 @@ try:
 except:
     import pickle
 
+import atpbar
+
 import alphatwirl
 from alphatwirl.misc.deprecation import _deprecated_class_method_option
 
@@ -76,6 +78,10 @@ class AtHeppy(object):
            ## htcondor_job_desc_extra=htcondor_job_desc_extra,
            dispatcher_options=dispatcher_options
         )
+
+        if quiet:
+            atpbar.funcs._do_not_start_pickup = True
+
         self.outdir = outdir
         self.heppydir = heppydir
         self.datamc = datamc
@@ -390,8 +396,6 @@ class ReaderCompositeWrapper(alphatwirl.loop.ReaderComposite):
    dataset = property(get_dataset, set_dataset)
 
 ##__________________________________________________________________||
-from alphatwirl.progressbar import atpbar
-
 class CollectorComposite(object):
     def __init__(self):
         self.components = [ ]
@@ -402,9 +406,10 @@ class CollectorComposite(object):
     def __call__(self, dataset_reader_list):
 
         ret = [ ]
-        for i, collector in enumerate(atpbar(self.components, name='collecting results')):
+        for i, collector in enumerate(atpbar.atpbar(self.components, name='collecting results')):
             ret.append(collector([(dataset, readerComposite.readers[i])
                                   for dataset, readerComposite in dataset_reader_list]))
+
         return ret
 
 ##__________________________________________________________________||
