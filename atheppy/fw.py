@@ -404,11 +404,16 @@ class CollectorComposite(object):
         self.components.append(collector)
 
     def __call__(self, dataset_reader_list):
+        dataset_reader_composite_list = dataset_reader_list
 
         ret = [ ]
         for i, collector in enumerate(atpbar.atpbar(self.components, name='collecting results')):
-            ret.append(collector([(dataset, readerComposite.readers[i])
-                                  for dataset, readerComposite in dataset_reader_list]))
+            dataset_reader_list = [ ]
+            for dataset, reader_composite in dataset_reader_composite_list:
+                reader = reader_composite.readers[i]
+                dataset_reader_list.append((dataset, reader))
+            result = collector(dataset_reader_list)
+            ret.append(result)
 
         return ret
 
