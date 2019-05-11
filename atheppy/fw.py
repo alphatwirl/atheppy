@@ -404,16 +404,34 @@ class CollectorComposite(object):
         self.components.append(collector)
 
     def __call__(self, dataset_reader_list):
-        dataset_reader_composite_list = dataset_reader_list
 
-        ret = [ ]
-        for i, collector in enumerate(atpbar.atpbar(self.components, name='collecting results')):
-            dataset_reader_list = [ ]
-            for dataset, reader_composite in dataset_reader_composite_list:
-                reader = reader_composite.readers[i]
-                dataset_reader_list.append((dataset, reader))
-            result = collector(dataset_reader_list)
-            ret.append(result)
+        dataset_reader_list = [
+            (d, reader_composite.readers)
+            for d, reader_composite in dataset_reader_list]
+        # e.g., [
+        #     ['QCD',    [reader11, reader21, reader31]],
+        #     ['TTJets', [reader12, reader22, reader32]],
+        #     ['WJets',  [reader13, reader23, reader33]],
+        # ]
+
+        dataset_reader_list = [
+            [(d, r) for r in readers]
+            for d, readers in dataset_reader_list]
+        # e.g., [
+        #     [('QCD',    reader11), ('QCD',    reader21), ('QCD',    reader31)],
+        #     [('TTJets', reader12), ('TTJets', reader22), ('TTJets', reader32)],
+        #     [('WJets',  reader13), ('WJets',  reader23), ('WJets',  reader33)]
+        # ]
+
+        dataset_reader_list = list(map(tuple, zip(*dataset_reader_list)))
+        # [
+        #     [('QCD', reader11), ('TTJets', reader12), ('WJets', reader13)],
+        #     [('QCD', reader21), ('TTJets', reader22), ('WJets', reader23)],
+        #     [('QCD', reader31), ('TTJets', reader32), ('WJets', reader33)],
+        # ]
+
+        zip_ = zip(atpbar.atpbar(self.components, name='collecting results'), dataset_reader_list)
+        ret = [collector(r) for collector, r in zip_]
 
         return ret
 
