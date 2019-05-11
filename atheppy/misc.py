@@ -16,21 +16,10 @@ def collect_results_into_tuplelist(reader, columns):
     return ret
 
 ##__________________________________________________________________||
-def combine_results_into_tuplelist(dataset_reader_list, dataset_column='dataset'):
-
-    if not dataset_reader_list:
-        return None
+def combine_results_into_tuplelist(dataset_tuple_list_pairs, dataset_column='dataset'):
 
     # e.g.,
-    # dataset_reader_list = [
-    #     ('QCD',    reader),
-    #     ('TTJets', reader),
-    #     ('WJets',  reader),
-    # ]
-
-    dataset_tuple_list_pairs = [(d, r.collect()) for d, r in dataset_reader_list]
-    # e.g.,
-    # [
+    # dataset_tuple_list_pairs = [
     #     ('QCD', [
     #         ('htbin', 'njetbin', 'n', 'nvar'),
     #         (    200,         2, 120,    240),
