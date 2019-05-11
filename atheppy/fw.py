@@ -405,32 +405,32 @@ class CollectorComposite(object):
 
     def __call__(self, dataset_reader_list):
 
-        dataset_reader_list = [
-            (d, reader_composite.readers)
+        dataset_result_list = [
+            (d, reader_composite.collect())
             for d, reader_composite in dataset_reader_list]
         # e.g., [
-        #     ['QCD',    [reader11, reader21, reader31]],
-        #     ['TTJets', [reader12, reader22, reader32]],
-        #     ['WJets',  [reader13, reader23, reader33]],
+        #     ['QCD',    [result11, result21, result31]],
+        #     ['TTJets', [result12, result22, result32]],
+        #     ['WJets',  [result13, result23, result33]],
         # ]
 
-        dataset_reader_list = [
+        dataset_result_list = [
             [(d, r) for r in readers]
-            for d, readers in dataset_reader_list]
+            for d, readers in dataset_result_list]
         # e.g., [
-        #     [('QCD',    reader11), ('QCD',    reader21), ('QCD',    reader31)],
-        #     [('TTJets', reader12), ('TTJets', reader22), ('TTJets', reader32)],
-        #     [('WJets',  reader13), ('WJets',  reader23), ('WJets',  reader33)]
+        #     [('QCD',    result11), ('QCD',    result21), ('QCD',    result31)],
+        #     [('TTJets', result12), ('TTJets', result22), ('TTJets', result32)],
+        #     [('WJets',  result13), ('WJets',  result23), ('WJets',  result33)]
         # ]
 
-        dataset_reader_list = list(map(tuple, zip(*dataset_reader_list)))
+        dataset_result_list = list(map(tuple, zip(*dataset_result_list)))
         # [
-        #     [('QCD', reader11), ('TTJets', reader12), ('WJets', reader13)],
-        #     [('QCD', reader21), ('TTJets', reader22), ('WJets', reader23)],
-        #     [('QCD', reader31), ('TTJets', reader32), ('WJets', reader33)],
+        #     [('QCD', result11), ('TTJets', result12), ('WJets', result13)],
+        #     [('QCD', result21), ('TTJets', result22), ('WJets', result23)],
+        #     [('QCD', result31), ('TTJets', result32), ('WJets', result33)],
         # ]
 
-        zip_ = zip(atpbar.atpbar(self.components, name='collecting results'), dataset_reader_list)
+        zip_ = zip(atpbar.atpbar(self.components, name='collecting results'), dataset_result_list)
         ret = [collector(r) for collector, r in zip_]
 
         return ret
