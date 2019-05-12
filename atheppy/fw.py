@@ -389,13 +389,22 @@ class CollectorComposite(object):
         self.components.append(collector)
 
     def __call__(self, dataset_result_list):
+        dataset_result_list = self._rearrange(dataset_result_list)
+        ret = [
+            collector(r) for collector, r
+            in zip(atpbar.atpbar(self.components, name='collecting results'), dataset_result_list)
+        ]
+        return ret
+
+    def _rearrange(self, dataset_result_list):
+
         # e.g., dataset_result_list = [
         #     ['QCD',    [result11, result21, result31]],
         #     ['TTJets', [result12, result22, result32]],
         #     ['WJets',  [result13, result23, result33]],
         # ]
 
-        dataset_result_list = [
+        ret = [
             [(d, r) for r in readers]
             for d, readers in dataset_result_list]
         # e.g., [
@@ -404,15 +413,12 @@ class CollectorComposite(object):
         #     [('WJets',  result13), ('WJets',  result23), ('WJets',  result33)]
         # ]
 
-        dataset_result_list = list(map(tuple, zip(*dataset_result_list)))
+        ret = list(map(tuple, zip(*ret)))
         # [
         #     [('QCD', result11), ('TTJets', result12), ('WJets', result13)],
         #     [('QCD', result21), ('TTJets', result22), ('WJets', result23)],
         #     [('QCD', result31), ('TTJets', result32), ('WJets', result33)],
         # ]
-
-        zip_ = zip(atpbar.atpbar(self.components, name='collecting results'), dataset_result_list)
-        ret = [collector(r) for collector, r in zip_]
 
         return ret
 
