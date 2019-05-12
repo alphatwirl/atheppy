@@ -1,7 +1,7 @@
 # Tai Sakuma <tai.sakuma@cern.ch>
 
 ##__________________________________________________________________||
-def collect_results_into_tuplelist(reader, columns):
+def to_tuple_list(reader, columns):
     ret = reader.results().to_tuple_list()
     # e.g.,
     # ret = [
@@ -12,6 +12,11 @@ def collect_results_into_tuplelist(reader, columns):
     #         (300, 3, 15, 30)
     # ]
 
+    ret.insert(0, columns)
+    return ret
+
+def to_tuple_list_for_selection(reader, columns):
+    ret = reader.results().to_tuple_list()
     ret.insert(0, columns)
     return ret
 
