@@ -371,8 +371,10 @@ class EventDatasetReader(object):
         # should keep data sets with empty inputs as well so as to
         # let readers return summary of empty inputs.
 
+        dataset_result_list = [(d, r.collect()) for d, r in dataset_reader_list]
+        # [('dataset1', result), ('dataset3', result)]
 
-        return self.collector(dataset_reader_list)
+        return self.collector(dataset_result_list)
 
     def _merge(self, runid, reader):
         dataset = self.runid_dataset_map[runid]
@@ -403,12 +405,8 @@ class CollectorComposite(object):
     def add(self, collector):
         self.components.append(collector)
 
-    def __call__(self, dataset_reader_list):
-
-        dataset_result_list = [
-            (d, reader_composite.collect())
-            for d, reader_composite in dataset_reader_list]
-        # e.g., [
+    def __call__(self, dataset_result_list):
+        # e.g., dataset_result_list = [
         #     ['QCD',    [result11, result21, result31]],
         #     ['TTJets', [result12, result22, result32]],
         #     ['WJets',  [result13, result23, result33]],
