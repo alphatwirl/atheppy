@@ -80,7 +80,7 @@ class AtHeppy(object):
         )
 
         if quiet:
-            atpbar.funcs._do_not_start_pickup = True
+            atpbar.disable()
 
         self.outdir = outdir
         self.heppydir = heppydir
