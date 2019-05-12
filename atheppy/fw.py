@@ -232,7 +232,7 @@ class AtHeppy(object):
                )
                dataset_readers.add(tblSMSNevt)
 
-        reader_top = ReaderCompositeWrapper()
+        reader_top = alphatwirl.loop.ReaderComposite()
         collector_top = CollectorComposite()
         for r, c in reader_collector_pairs:
             reader_top.add(r)
@@ -331,7 +331,6 @@ class EventDatasetReader(object):
         eventLoops = [ ]
         for build_events in build_events_list:
             reader = copy.deepcopy(self.reader)
-            reader.dataset = dataset.name
             eventLoop = alphatwirl.loop.EventLoop(build_events, reader, dataset.name)
             eventLoops.append(eventLoop)
         runids = self.eventLoopRunner.run_multiple(eventLoops)
@@ -380,22 +379,6 @@ class EventDatasetReader(object):
         dataset = self.runid_dataset_map[runid]
         runid_reader_map = self.dataset_runid_reader_map[dataset]
         alphatwirl.loop.merge.merge_in_order(runid_reader_map, runid, reader)
-
-##__________________________________________________________________||
-class ReaderCompositeWrapper(alphatwirl.loop.ReaderComposite):
-   def __init__(self, readers=None):
-      super(ReaderCompositeWrapper, self).__init__(readers)
-      self._dataset = None
-
-   def get_dataset(self):
-      return self._dataset
-
-   def set_dataset(self, value):
-      self._dataset = value
-      for reader in self.readers:
-         reader.dataset = value
-
-   dataset = property(get_dataset, set_dataset)
 
 ##__________________________________________________________________||
 class CollectorComposite(object):
