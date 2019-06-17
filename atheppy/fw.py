@@ -291,6 +291,20 @@ class AtHeppy(object):
 
 ##__________________________________________________________________||
 class EventDatasetReader(object):
+    """This class manages objects involved in reading events in data sets.
+
+    On receiving a data set, this class calls the function
+    split_into_build_events(), which splits the data set into chunks,
+    creates the function build_events() for each chunk, and returns a
+    list of the functions. Then, for each build_events(), This class
+    creates a copy of the reader, creates an event loop, and send it
+    to the event loop runner.
+
+    At the end, this class receives results from the event loop runner
+    and have the collector collect them.
+
+    """
+
     def __init__(self, eventLoopRunner, reader, collector,
                  split_into_build_events):
 
